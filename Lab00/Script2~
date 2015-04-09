@@ -1,0 +1,16 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+Param=$@
+echo "$Param"
+while ($Param > 0)
+do
+$Param=$Param - 1
+echo "$Param"
+done
+
+exit 0

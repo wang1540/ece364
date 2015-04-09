@@ -1,0 +1,16 @@
+#! /bin/bash
+#$Author: ee364b09 $
+#$Date: 2015-01-20 15:25:02 -0500 (Tue, 20 Jan 2015) $
+#$Revision: 73172 $
+#$HeadURL: svn+ssh://ece364sv@ecegrid-thin1/home/ecegrid/a/ece364sv/svn/S15/students/ee364b09/Lab00/Script2 $
+#$Id: Script2 73172 2015-01-20 20:25:02Z ee364b09 $
+
+Param=$@
+echo "$Param"
+while ($Param > 0)
+do
+$Param=$Param - 1
+echo "$Param"
+done
+
+exit 0
