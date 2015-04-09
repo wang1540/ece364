@@ -1,0 +1,134 @@
+#! /usr/bin/env python3.4
+#$Author:
+#$Date:
+#$Revision:
+#$HeadURL:
+#$Id:
+
+def checkIfMatrixIsValid(matrix):
+    #result = 1
+    k = len(matrix)
+
+    if not type(matrix[0]) == list:
+        #result = 0
+        return False
+
+    size = len(matrix[0])
+    for i in range (k):
+        temp=len(matrix[i])
+        if not temp == size:
+            #result = 0
+            break
+    return True
+
+def getMatrixSize(matrix):
+    check=checkIfMatrixIsValid(matrix)
+    if check == 0:
+        return []
+    else:
+        row=len(matrix)
+        col=len(matrix[0])
+        result=[]
+        result=[row, col]
+        return result
+
+def getRow(matrix, rowIndex):
+    check=checkIfMatrixIsValid(matrix)
+    if check == 0:
+        return []
+    else:
+        size=getMatrixSize(matrix)
+        #print (size[0])
+        rowmax=size[0]
+        if rowIndex > rowmax or rowIndex == 0:
+            return []
+        else:
+            return matrix[rowIndex - 1]
+
+def getColumn (matrix, columnIndex):
+    check=checkIfMatrixIsValid(matrix)
+    if check == 0:
+        return []
+    else:
+        size=getMatrixSize(matrix)
+        #print (size[0])
+        colmax=size[1]
+        row=size[0]
+        if columnIndex > colmax or columnIndex == 0:
+            return []
+        else:
+            result = []
+            for i in range(row):
+                result = result + [matrix[i][columnIndex - 1]]
+            return result
+
+def transposeMatrix(matrix):
+    check=checkIfMatrixIsValid(matrix)
+    if check == 0:
+        return None
+    else:
+        size=getMatrixSize(matrix)
+        result=[]
+        for i in range(size[1]):
+            temp=getColumn(matrix,i+1)
+            result=result+[temp]
+        return result
+
+def dotProduct(row, column):
+    rsize=len(row)
+    csize=len(column)
+    if not rsize == csize:
+        return None
+    else:
+        sum1=0
+        for i in range(rsize):
+            sum1=sum1+row[i]*column[i]
+        return sum1
+
+def multiplyMatrices(matrix1,matrix2):
+    check1=checkIfMatrixIsValid(matrix1)
+    check2=checkIfMatrixIsValid(matrix2)
+    if check1 == 0 or check2 == 0:
+        return None
+    else:
+        size1=getMatrixSize(matrix1)
+        size2=getMatrixSize(matrix2)
+        if not size1[1] == size2[0]:
+            return None
+        else:
+            result=[[0]*size1[0] for i in range(size2[1])]
+            for i in range(size1[0]):
+                row=getRow(matrix1,i+1)
+                for j in range(size2[1]):
+                    col=getColumn(matrix2,j+1)
+                    result[i][j] = dotProduct(row,col)
+            return result
+
+if __name__=="__main__":
+    mat = [[1,2],[3,4],[2,2],[5,4]]
+    mat2=[[9,1],[1,3],[3,1]]
+    c = checkIfMatrixIsValid(mat)
+    print (c)
+
+    result = getMatrixSize(mat)
+    #print (result)
+
+    result=getRow(mat,1)
+    print(result)
+
+    result=getColumn(mat,0)
+
+    result=transposeMatrix(mat2)
+    #print (result)
+
+    r=[6,2,9,0]
+    c=[1,3,2,1]
+
+    print (dotProduct(r,c))
+    mat1=[[7,8,-2],[4,2,5]]
+    mat2=[[9,0],[3,7],[-2,10]]
+    mat1=[[9,10],[6,3],[10,4]]
+    mat2=[[7,0,4],[5,4,1]]
+
+    result = multiplyMatrices(mat1, mat2)
+    print (result)

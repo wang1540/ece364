@@ -1,0 +1,45 @@
+#! /usr/bin/env python3.4
+__author__ = "Xihui Wang"
+import string
+import re
+
+def is_valid_name(identifier):
+    char = string.ascii_letters
+    valid = char + '0123456789' + '_'
+    for c in identifier:
+        if not c in valid:
+            return False
+    return True
+
+
+def parse_pin_assignment(assignment):
+    out = re.match(r'\.(.*)\((.*)\)',assignment)
+    if not out:
+        raise ValueError(assignment)
+    port, pin = out.group(1), out.group(2)
+    if not is_valid_name(port):
+        raise ValueError(assignment)
+    if not is_valid_name(pin):
+        raise ValueError(assignment)
+    return port, pin
+
+
+def parse_net(line):
+    out = re.search(r'(.*?)\((.*)\)',line)
+    if not out:
+        raise ValueError(line)
+    name1, name2 = out.group(1).split()
+    if not is_valid_name(name1) or not is_valid_name(name2):
+        raise ValueError(line)
+    eles = out.group(2).split(',')
+    pp = []
+    for ele in eles:
+        ele = ele.strip()
+        if not parse_pin_assignment(ele):
+            raise ValueError(line)
+        else:
+            pp += [parse_pin_assignment(ele)]
+    return name1, name2, tuple(pp)
+
+if __name__ == "__main__":
+    lien = 'DFFSR present_val_reg  ( .D(n30), .CLK(clk), .R(n33), .S(1), .Q(stop_bit) )'

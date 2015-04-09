@@ -1,0 +1,33 @@
+Prelab06 --- Part1
+1.
+str = 'a AAA bbb'
+match = re.search(r'\sA{2,5}\s',str)
+ AAA 
+2.
+num = '0.124.124423 jih 578.075 +65.2 -54.7 +-.0'
+print(re.sub(r'[+-]?[0-9]*\.[0-9]+',r'float',num))
+floatfloat jih float float float +float
+3.
+num = '0.124.124423 jih 578.075 +65.2 -54.7 +-.0'
+print(re.sub(r'[+-]?[0-9]*\.[0-9]+',r'float',num,3))
+4.
+num='5 8  6  8 5   86 as a7 5 8 5 0'
+s=re.findall(r'[+-]?[0-9]+',num)
+x=sum([int(i) for i in s])/len(s)
+5.
+print(re.sub(r'(E{2})(364)',r'EE461',str))
+6.
+out = re.search (r'^(\d{1,2}\.|[0-1]\d{2}\.|2[0-4]\d\.|25[0-5]\.){3}(\d{1,2}|[0-1]\d{2}|2[0-4]\d|25[0-5])$',line)
+7.
+re.search("e", input, re.I) 
+to see if 'e' or 'E' is somewhere in the string input
+out=re.match("(.*)(is a)(.*)", input) 
+to see whether or not the string input contains the segment 'is a'. also '.*' means any string of any length. and since we have three '()' here, we gonna have group 0 to 3. where out.group(0) is the overall string; out.group(1) is the substring before 'is a'; out.group(2) is the part 'is a'; out.group(3) is the substring after 'is a'
+re.match("(?P.*)(?Pis a)(?P.*)", input) 
+this code will not gonna work, the correct way to use ?P is "c=re.match('(?P<a>.*)(?P<b>is a)(?P<c>.*)', str) ", you to give a name for each group. The output gonna looks like:
+>>> c.group(2)
+'is a'
+>>> c.group("b")
+'is a'
+re.search("(I){1}(like){10,}(you){1,2}", input) 
+fine the substring that contains only one 'I', and more than 10 'like', and one or two 'you' in the string input. also, between each word, there should not contain whitespace

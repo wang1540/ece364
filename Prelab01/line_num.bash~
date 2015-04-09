@@ -1,0 +1,26 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+count=$#
+xy=1
+
+if (( $count != 1))
+then 
+	printf "Usage: line_num.bash <filename>\n"
+	exit 0
+elif [[ ! -r $1 ]]
+then
+	printf "Cannot read %s\n" $1
+else
+	while read line
+	do
+		echo -n "$xy:"
+		echo "$line"
+		((xy=$xy+1))
+	done < $1 
+fi
+exit 0

@@ -1,0 +1,41 @@
+#! /usr/bin/env python3.4
+
+__author__ = 'ee364b09'
+
+import re
+
+if __name__ == "__main__":
+
+    with open('addys.in','r') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        out = re.search (r'^(\d{1,2}\.|[0-1]\d{2}\.|2[0-4]\d\.|25[0-5]\.){3}(\d{1,2}|[0-1]\d{2}|2[0-4]\d|25[0-5])\:',line)
+        if out:
+            out2 = re.search (r':(\d*)$',line)
+            if out2:
+                if not int(out2.group(1)) in range(1, 32768):
+                    print(line[:-1], end='')
+                    print(' - Invalid Port Number')
+                else:
+                    if int(out2.group(1)) < 1024:
+                        print(line[:-1], end='')
+                        print(' - Valid (root privileges required)')
+                    else:
+                        print(line[:-1], end='')
+                        print(' - Valid')
+            else:
+                print(line[:-1], end='')
+                print(' - Invalid Port Number')
+        else:
+            print(line[:-1], end='')
+            print(' - Invalid IP Address')
+
+        #     if max(int(out.group(1)),int(out.group(2)),int(out.group(3)),int(out.group(4))) > 255:
+        #         print ('Invalid IP Address')
+        #     elif not int(out.group(5)) in range(1,32768):
+        #         print ('Invalid Port Number')
+        #     else:
+        #         print(out.group())
+        # else:
+        #     print('Invalid Port Number')

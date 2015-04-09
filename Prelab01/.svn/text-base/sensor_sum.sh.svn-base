@@ -1,0 +1,33 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+if (( $# == 0 ))
+then 
+    echo usage: sensor_sum.sh
+else
+    while (($# != 0))
+    do
+	if [[ -r $1 ]]
+	then
+	    while read line
+	    do
+		sensorid=$(echo $line | cut -d'-' -f1)
+		data1=$(echo $line | cut -d' ' -f2)
+		data2=$(echo $line | cut -d' ' -f3)
+		data3=$(echo $line | cut -d' ' -f4)
+		sum=$(( $data1 + $data2 + $data3 ))
+		echo $sensorid $sum #$data1 $data2 $data3 
+	    done < $1
+	else
+	    echo error: $1 is not a readable file!
+	fi
+	echo " "
+	shift
+    done
+fi
+
+exit 0

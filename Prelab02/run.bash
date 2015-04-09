@@ -1,0 +1,89 @@
+#! /bin/bash
+#$Author: ee364b09 $
+#$Date: 2015-01-26 22:56:42 -0500 (Mon, 26 Jan 2015) $
+#$Revision: 74110 $
+#$HeadURL: svn+ssh://ece364sv@ecegrid-thin1/home/ecegrid/a/ece364sv/svn/S15/students/ee364b09/Prelab02/run.bash $
+#$Id: run.bash 74110 2015-01-27 03:56:42Z ee364b09 $
+
+if [[ -e quick_sim ]]
+then
+    rm quick_sim
+fi
+
+gcc $1 -o quick_sim
+
+if [[ $? != 0 ]]
+then
+    echo "error: quick_sim could not be compiled!"
+    exit 1
+else
+
+    if [[ -e $2 ]]
+    then
+	echo -n "$2 exists.  Would you like to delete it? "
+	read resp
+	if [[ ($resp == 'y') || ($resp == 'yes') ]]
+	then
+	    rm $2
+	    output="$2"	   
+	else
+	    echo -n "Enter a new filename: "
+	    read output
+	fi
+    else
+	output="$2"
+    fi
+    #echo "$output"
+    touch $output
+    min=99999
+    for (( i=0; i<=5; i++ ))
+    do
+	((cache=2**i))
+	for (( j=0; j<=4; j++ ))
+	do
+	    (( widths=2**j))
+	    manu=a
+	    line=$(quick_sim $cache $widths $manu)
+	    name=$(echo $line | cut -d':' -f2)
+	    data1=$(echo $line | cut -d':' -f4)
+	    data2=$(echo $line | cut -d':' -f6)
+	    data3=$(echo $line | cut -d':' -f8)
+	    data4=$(echo $line | cut -d':' -f10)
+	    echo "$name:$data1:$data2:$data3:$data4" >> $output
+	    if [[ min > $data4 ]]
+	    then
+		(( min = $data4 ))
+	    fi
+	    manu=i
+	    line=$(quick_sim $cache $widths $manu)
+	    name=$(echo $line | cut -d':' -f2)
+	    data1=$(echo $line | cut -d':' -f4)
+	    data2=$(echo $line | cut -d':' -f6)
+	    data3=$(echo $line | cut -d':' -f8)
+	    data4=$(echo $line | cut -d':' -f10)
+	    echo "$name:$data1:$data2:$data3:$data4" >> $output
+	    if [[ min > $data4 ]]
+	    then
+		(( min = $data4 ))	      
+	    fi
+	done
+    done
+fi
+#echo "$min"
+
+exec 2< $output
+while read txt <&2
+do
+    #echo "$txt"
+    data4=$(echo $txt | cut -d':' -f5)
+    #echo "$data4"
+    if [[ $data4 == $min ]]
+    then
+	name=$(echo $txt | cut -d':' -f1)
+	data1=$(echo $txt | cut -d':' -f2)
+	data2=$(echo $txt | cut -d':' -f3)
+	echo "Fastest run time achieved by $name with cache size $data1 and issue width $data2 was $min"
+    fi
+done
+exit 0
+

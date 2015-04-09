@@ -1,0 +1,2 @@
+present_val_reg: DFFSR PORT MAP(D=>n30, CLK=>clk, R=>n33, S=>1, Q=>stop_bit);
+U2: OAI22X1 PORT MAP(A=>n28, B=>n32, C=>n3, D=>n31, Y=>n15);

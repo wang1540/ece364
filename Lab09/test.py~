@@ -1,0 +1,59 @@
+#! /usr/bin/env python3.4
+__author__ = "Xihui Wang"
+from typedDict import *
+
+
+try:
+    a = Entry(4,'r')
+    print(a) 
+    b = Entry(42,'r')
+    print(b)
+    c = Entry(5,'e')
+    print(c)
+except:
+    pass
+# a = Entry(4,4)
+e = Lookup('eee')
+print(e)
+
+e.addEntry(a)
+print(e)
+
+e.addEntry(b)
+print(e)
+
+e.addEntry(c)
+e.prt()
+print()
+
+m = Entry(5,'c')
+e.updateEntry(m)
+e.prt()
+print()
+
+n = Entry(5,'e')
+e.addOrUpdateEntry(n)
+e.prt()
+print()
+
+h = Entry(7,'e')
+e.addOrUpdateEntry(h)
+e.prt()
+
+di = {}
+di[0] = 'a'
+di[1] = 'b'
+print(type(di))
+
+e.addOrUpdateFromDictionary(di)
+print(e)
+
+print(e.getElementCount())
+print(e.getKeys())
+print(e.getValues())
+
+e.removeEntry(h)
+print(e.getElementCount())
+print(e.getKeys())
+print(e.getValues())
+

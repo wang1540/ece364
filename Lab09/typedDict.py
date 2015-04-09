@@ -1,0 +1,104 @@
+#! /usr/bin/env python3.4
+__author__ = "Xihui Wang"
+
+
+class Entry:
+
+    def __init__(self, k=0,v=''):
+        if not (type(k)==int and type(v)==str):
+            raise TypeError('format: Entry(int, str)')
+        self.key = int(k)
+        self.value = str(v)
+
+    def __str__(self):
+        return '({}: "{}")'.format(self.key, self.value)
+
+    def __hash__(self):
+        Tuple = self.key, self.value
+        return hash(Tuple)
+
+
+class Lookup:
+
+    def __init__(self, name):
+        if not name:
+            raise ValueError('format: Lookup(str)')
+        if not type(name) == str:
+            raise TypeError('format: Lookup(str)')
+        self._entrySet = set()
+        self._name = name
+
+    def __str__(self):
+        return '["{}": {:02d} Entries]'.format(self._name, len(self._entrySet))
+
+    def prt(self):
+        for ele in self._entrySet:
+            print(ele)
+
+    def addEntry(self, entry):
+        if not isinstance(entry, Entry):
+            raise TypeError('format: addEntry(Entry)')
+        for ele in self._entrySet:
+            if ele.key == entry.key:
+                raise ValueError ('entry key already in set')
+        return self._entrySet.add(entry)
+
+    def updateEntry(self, entry):
+        self.removeEntry(entry)
+        return self.addEntry(entry)
+
+    def addOrUpdateEntry(self, entry):
+        try:
+            self.updateEntry(entry)
+        except:
+            self.addEntry(entry)
+
+    def removeEntry(self, entry):
+        if not isinstance(entry, Entry):
+            raise TypeError('format: removeEntry(Entry)')
+        target = self.getEntry(entry.key)
+        return self._entrySet.discard(target)
+
+    def getEntry(self, key):
+        if not type(key) == int:
+            raise TypeError('format: getEntry(int)')
+        flag = 0
+
+        for ele in self._entrySet:
+            if ele.key == key:
+                target = ele
+                flag = 1
+
+        if flag == 0:
+            raise KeyError('entry key is not in set')
+
+        return target
+
+    def addOrUpdateFromDictionary(self, someDick):
+        if not type(someDick) == dict:
+            raise TypeError('format: addOrUpdateFromDictionary(dict)')
+
+        for k in someDick.keys():
+            entry = Entry(k, someDick[k])
+            self.addOrUpdateEntry(entry)
+
+    def getAsDictionary(self):
+        Dick = {}
+        for ele in self._entrySet:
+            k = ele.key
+            v = ele.value
+            Dick[k] = v
+        return Dick
+
+    def getKeys(self):
+        keylist = [ele.key for ele in self._entrySet]
+        keylist.sort()
+        return keylist
+
+    def getValues(self):
+        vlist = [ele.value for ele in self._entrySet]
+        vlist.sort()
+        return vlist
+
+    def getElementCount(self):
+        return len(self._entrySet)

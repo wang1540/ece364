@@ -1,0 +1,25 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+flag=0
+
+while [[ $flag == 0 ]]
+do
+	echo -n "Enter a command: "
+	read com
+
+	if [[ $com == 'hello' ]]
+	then
+	echo "Hello $whoani"
+	elif [[ $com == 'quit' ]]
+	then 
+		echo "Exiting..."
+		exit 0
+	elif
+		
+	fi
+done

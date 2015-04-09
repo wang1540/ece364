@@ -1,0 +1,27 @@
+#! /bin/bash
+
+#A[27]="x"
+#A[6]="y"
+#A[86]="z"
+
+#echo "${!A[*]}"
+
+#for I in ${A[*]}
+#do
+#    echo "$I"
+#done
+
+exec 4< benchmarks.txt
+exec 3< first10.txt
+
+#while read line <&4
+#do    
+#    echo "$line"   
+#done
+
+echo $benchmarks.txt | head -n 10 >> first10.txt
+
+
+echo "$f10"
+
+exit 0

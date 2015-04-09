@@ -1,0 +1,35 @@
+#! /usr/bin/env python3.4
+import sys
+__author__ = "Xihui Wang"
+
+
+def main():
+    if not len(sys.argv) == 2:
+        print("Usage: Parse.py [filename];")
+        return
+    filename = sys.argv[1]
+
+    try:
+        with open (filename, 'r') as f:
+            lines = f.readlines()
+        for line in lines:
+            temp = []
+            num = []
+            value_list =line.split()
+            for ele in value_list:
+                try:
+                    ele = float(ele)
+                    num.append(ele)
+                except ValueError:
+                    temp.append(ele)
+            experiment = " ".join(temp)
+            avg = sum(num) / len(num) if not len(num) == 0 else 0
+            if not avg == 0:
+                print("{:.3f} {}".format(avg, experiment))
+            else:
+                print(experiment)
+    except IOError:
+        print("{} is not a readable file.".format(filename))
+
+if __name__ == '__main__':
+    main()

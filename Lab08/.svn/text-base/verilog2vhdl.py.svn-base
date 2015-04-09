@@ -1,0 +1,93 @@
+#! /usr/bin/env python3.4
+__author__ = "Xihui Wang"
+import sys
+from vtools import *
+
+if len(sys.argv) > 3:
+    print("Usage: verilog2vhdl.py [infile] [outfile]")
+    exit(1)
+
+if len(sys.argv) == 1:
+    for name in sys.stdin:
+        try:
+            with open(name[:-1], 'r') as fin:
+                lines = fin.readlines()
+        except IOError as r:
+            print('Error:',r)
+            exit(2)
+
+if len(sys.argv) == 2:
+    try:
+        with open(sys.argv[1], 'r') as fin:
+            lines = fin.readlines()
+    except IOError as r:
+        print('Error:',r)
+        exit(2)
+
+    for line in lines:
+        try:
+            name1, name2, T = parse_net(line)
+            output = name2 + ': ' + name1 + ' PORT MAP' + '('
+            for t in T:
+                port, pin = t
+                output = output + port + '=>' + pin + ', '
+            output = output[:-2] + ');'
+            print(output)
+        except ValueError as e:
+            print('Error input file is not a valid verilog port map!')
+            print('Error:',e)
+            exit(4)
+
+
+if len(sys.argv) == 3:
+    try:
+        with open(sys.argv[1], 'r') as fin:
+            lines = fin.readlines()
+    except IOError as r:
+        print('Error:',r)
+        exit(2)
+
+    try:
+        fout = open(sys.argv[2], 'w')
+    except IOError as r:
+        print('Error:',r)
+        exit(3)
+    for line in lines:
+        try:
+            name1, name2, T = parse_net(line)
+            output = name2 + ': ' + name1 + ' PORT MAP' + '('
+            for t in T:
+                port, pin = t
+                output = output + port + '=>' + pin + ', '
+            output = output[:-2] + ');' + '\n'
+            fout.write(output)
+        except ValueError as e:
+            print('Error input file is not a valid verilog port map!')
+            print('Error:',e)
+            exit(4)
+    fout.close()
+
+
+
+
+
+
+#
+# else:
+#     fin = open(sys.argv[1], 'r')
+# if not fin:
+#     raise IOError("No Such file or directory:'{}'".format(sys.argv[1]))
+#
+# try:
+#     infile = sys.argv[1]
+#     with open (infile, 'r') as fin:
+#         lines = fin.readlines()
+#     # outfile = sys.argv[2]
+#     # fout = open(outfile, 'w')
+# except IOError:
+#     print("No Such file or directory:'{}'".format(infile))
+#     exit(2)
+# finally:
+#     pass
+    #fout.close()
+

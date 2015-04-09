@@ -1,0 +1,26 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+while (( $# != 0 ))
+do
+    FILENAME=$1
+    [[ -r $FILENAME ]]
+    fread=$?
+    [[ -e $FILENAME ]]
+    fexist=$?
+    
+    if (( $fread == 0 ))
+    then 
+	printf "File %s is readable\n" $FILENAME
+    elif (( $fexist == 1 ))
+    then
+	touch $FILENAME
+    fi
+    shift
+done
+exit 0
+

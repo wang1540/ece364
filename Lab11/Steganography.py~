@@ -1,0 +1,94 @@
+#! /usr/local/bin/python3.4
+import numpy
+
+__author__ = "Xihui Wang"
+import base64
+import re
+from PIL import Image
+
+class Message:
+    def __init__(self, **kwargs):
+        if len(kwargs) == 1:
+            try:
+                self.XmlString = kwargs['XmlString']
+            except:
+                raise ValueError('missing argument of message')
+
+        elif len(kwargs) == 2:
+            try:
+                self.filePath = kwargs['filePath']
+                self.messageType = kwargs['messageType']
+                if self.messageType != 'Text' and self.messageType != 'GrayImage' and self.messageType != 'ColorImage':
+                    raise ValueError('type of self.messageType is wrong')
+            except:
+                raise ValueError('missing argument of message')
+
+        else:
+            raise ValueError('missing argument of message')
+
+    def getMessageSize(self):
+        if len(self.XmlString) == 0:
+            raise Exception
+        return len(self.XmlString)
+
+    def saveToImage(self, targetImagePath):
+        if not self.XmlString:
+            raise Exception
+        output = re.findall(r'<message type=\"(.*)\" size=\"(.*)\,(.*)\" encrypted=\".*\">\n(.*)\n</message>', self.XmlString)
+        print(output)
+        mtype, l, h, message = output[0]
+        if mtype != 'GrayImage' and mtype != 'ColorImage':
+            raise TypeError
+        result = base64.b64decode(message)
+        print(result)
+        # fout = open(targetImagePath, 'w')
+        # fout.close()
+
+    def saveToTextFile(self, targetTextFilePath):
+        if not self.XmlString:
+            raise Exception
+        output = re.findall(r'<message type=\"(.*)\" size=\"(.*)\" encrypted=\".*\">\n(.*)\n</message>', self.XmlString)
+        print(output)
+        mtype, size, message = output[0]
+        if mtype != 'Text':
+            raise TypeError
+        result = base64.b64decode(message)
+
+        fout = open(targetTextFilePath, 'w')
+        cc = str(result)[2:-1]
+        print(cc)
+        fout.write(cc)
+        fout.close()
+
+    def saveToTarget(self, targetPath):
+        try:
+            self.saveToImage(targetPath)
+        except:
+            self.saveToTextFile(targetPath)
+
+    def getXmlString(self):
+        try:
+            out = Image.open(self.filePath)
+            l,h = out.size
+            pix = list(out.getdata())
+            output = base64.b64encode(bytes(pix))
+            return '<?xml version="1.0" encoding="UTF-8"?>\n<message type="{}" size="{},{}" encrypted="{}">\n{}\n</message>'.format(self.messageType, l, h, 'False', str(output)[2:])
+        except:
+            with open(self.filePath, 'rt') as f:
+                line = f.read()
+            output = base64.b64encode(line.encode('ascii'))
+            return '<?xml version="1.0" encoding="UTF-8"?>\n<message type="{}" size="{}" encrypted="{}">\n{}\n</message>'.format(self.messageType, len(line), 'False', str(output)[2:])
+
+
+class Steganography:
+    def __init__(self, imagePath, direction='horizontal'):
+        pass
+
+    def embedMessageInMedium(self, message, targetImagePath):
+        pass
+
+    def extractMessageFromMedium(self):
+        pass
+
+# if __name__ == "__main__":
+# pass

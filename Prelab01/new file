@@ -1,0 +1,7 @@
+ssh - keygen
+ssh-keygen
+ls .ssh
+sendkey
+ssh-keygen -p
+svn checkout $SVNREPO .
+

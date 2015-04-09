@@ -1,0 +1,64 @@
+#! /bin/bash
+#$Author$
+#$Date$
+#$Revision$
+#$HeadURL$
+#$Id$
+
+flag=0
+
+exec 3< file_list
+while read line <&3
+do
+    echo "$line"
+    
+    if [[ -e $line ]]
+    then
+	STATUS=$(svn status $line | head -c 1)
+	echo "$STATUS"
+	if [[ $STATUS == '?' ]]
+	then
+	    if [[ -x $line ]]
+	    then
+		svn add $line
+	    else
+		flag=0
+		while [[ $flag == 0 ]]
+		do
+		    echo "would you like to execute $line? enter y or n: "
+		    read haha
+		    echo "you entered:" $haha	
+		#while [[ $haha != 'y' ]] || [[$haha != 'n' ]]
+		#do		
+		#    echo "error, please enter y or n"
+		#    read haha
+		#    echo "you entered:" $haha
+		#done
+		#read -p "Enter 'y' if you want to make $line" haha
+		    if [[ $haha == 'y' ]]
+		    then
+			flag=1
+			chmod +x $line
+			svn add $line		    
+		    fi
+		    if [[ $haha == 'n' ]]
+		    then	   
+			flag=1
+			svn add $line		   
+		    fi
+		done
+	    fi
+	fi
+	if [[ $STATUS != '?' ]] && [[ -x $line ]]
+	then 
+	    svn propset svn:executable ON $line
+	fi
+    else
+	printf "Error: File %s appears to not exist here or in svn.\n" $line
+    fi
+    
+done
+svn commit
+echo "Autocommitting code"
+
+exit 0
