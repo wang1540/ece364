@@ -3,7 +3,7 @@ import os
 import uuid
 import unittest
 from PIL import Image
-from Steganography import Message, Steganography
+from Steganography import *
 import base64
 
 if __name__ == "__main__":
@@ -51,8 +51,8 @@ if __name__ == "__main__":
     # embed full.txt into lena.png. xx.png is output that contains message.
     # AND compare the getXmlString of the xx.png and lena.png we could conclude that the two are different
 
-    # sourcePath = 'full.txt'
-    # message = Message(filePath=sourcePath, messageType='Text')
+    sourcePath = 'full.txt'
+    message = Message(filePath=sourcePath, messageType='Text')
     # imagePath = 'lena.png'
     # stegan = Steganography(imagePath, 'vertical')
     #
@@ -75,6 +75,7 @@ if __name__ == "__main__":
     imagePath = 'lena.png'
     stegan = Steganography(imagePath, 'horizontal')
     #
-    # stegan.embedMessageInMedium(message, 'xx.png')
-    stegan.extractMessageFromMedium()
+    stegan.embedMessageInMedium(message, 'xx.png')
+    # mess = stegan.extractMessageFromMedium()
+    # print(mess)
 

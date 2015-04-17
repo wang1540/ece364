@@ -23,7 +23,7 @@ class Message:
                 self.messageType = kwargs['messageType']
                 if not self.filePath:
                     raise ValueError('file path should not be none')
-                if self.messageType != 'Text' and self.messageType != 'GrayImage' and self.messageType != 'ColorImage':
+                if self.messageType not in ['Text', 'GrayImage', 'ColorImage']:
                     raise ValueError('type of self.messageType is wrong')
             except:
                 raise ValueError('missing argument of message')
@@ -116,6 +116,7 @@ class Message:
         else:
             raise TypeError
 
+
 class Steganography:
     # initialize all the variables, and  check if all inputs are valid
     def __init__(self, imagePath, direction='horizontal'):
@@ -131,6 +132,7 @@ class Steganography:
         self.direction = direction
         self.imagePath = imagePath
 
+    # translate the normal text string to its binary asill value
     def bv_text(self, target):
         overall = ''
         for characters in target:
@@ -139,12 +141,6 @@ class Steganography:
             bv = bv[len(bv)-8:]
             overall += bv
         return overall
-
-    def bv_int(self, target):
-        bv = bin(target)[2:]
-        # bv = bv[len(bv)-8:]
-        return bv
-
 
     # embed the message into the given medium. for this case, the medium should be gray image
     # there are two way to embed the message, one is horizontal, and the other one is vertical
