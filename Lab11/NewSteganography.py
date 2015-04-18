@@ -28,21 +28,54 @@ class NewSteganography(Steganography):
         return
 
     def checkIfMessageExists(self):
-        result = self.extractMessageFromMedium()
-        if result is None:
+        # result = self.extractMessageFromMedium()
+        # if result is None:
+        #     return False, None
+        # else:
+        #     ttype = re.findall(r'<message type="(.*?)"', result.XmlString)
+        #     return True, ttype[0]
+
+        out = Image.open(self.imagePath)
+        l, h = out.size
+        pix = list(out.getdata())
+        messg = ''
+        lim = 70 * 8
+        ind = 0
+
+        if self.direction == 'horizontal':
+            for ele in pix:
+                ind += 1
+                ele_bv = bin(ele)[2:]
+                # ele_bv = str(BitVector.BitVector(intVal=ele))
+                messg += ele_bv[-1]
+                if ind == lim:
+                    break
+        else:
+            for i in range(int(l)):
+                for j in range(int(h)):
+                    ind += 0
+                    ele_bv = bin(pix[j*int(l) + i])[2:]
+                    # ele_bv = str(BitVector.BitVector(intVal=pix[j*int(l) + i]))
+                    messg += ele_bv[-1]
+                    if ind == lim:
+                        break
+
+        temp = [chr(int(messg[8*times: 8*(times+1)], 2)) for times in range(int(len(messg)/8))]
+        messgstr = ''.join(temp)
+        out = re.findall(r'<\?xml version="1\.0" encoding="UTF-8"\?>\n<message type="(.*?)"', messgstr)
+        if not out:
             return False, None
         else:
-            ttype = re.findall(r'<message type="(.*?)"', result.XmlString)
-            return True, ttype[0]
+            return True, out[0]
 
 if __name__ == "__main__":
-    imagePath = 'xx.png'
+    imagePath = 'nature_sunflower_h.png'
     stegan = NewSteganography(imagePath, 'horizontal')
-    res = stegan.checkIfMessageExists()
+    _, res = stegan.checkIfMessageExists()
     print(res)
 
-    stegan.wipeMedium()
-
-    xstegan = NewSteganography('wiped.png', 'horizontal')
-    res = xstegan.checkIfMessageExists()
-    print(res)
+    # stegan.wipeMedium()
+    #
+    # xstegan = NewSteganography('horizontal')
+    # res = xstegan.checkIfMessageExists()
+    # print(res)

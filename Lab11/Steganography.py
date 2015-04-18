@@ -72,6 +72,7 @@ class Message:
         mtype, message = output[0]
         if mtype != 'Text':
             raise TypeError
+        # print(message)
         result = str(base64.b64decode(message), 'utf-8')
 
         fout = open(targetTextFilePath, 'w')
@@ -204,6 +205,7 @@ class Steganography:
                     
         temp = [chr(int(messg[8*times: 8*(times+1)], 2)) for times in range(int(len(messg)/8))]
         messgstr = ''.join(temp)
+        # print(messgstr)
         out = re.findall(r'<\?xml version="1\.0" encoding="UTF-8"\?>\n<message type=".*" size=".*" encrypted=".*">\n.*\n</message>', messgstr)
         if not out:
             return None
